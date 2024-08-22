@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d
+      - ./certs:/etc/nginx/certs
+      - ./html:/var/www/html
+      - ./log/nginx:/var/log/nginx
+
+  php:
+    image: php:fpm
+    container_name: php
+    restart: always
+    volumes:
+      - ./html:/var/www/html
+
+  mysql:
+    image: mysql:5.7.44
+    container_name: mysql
+    restart: always
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Root_pwd_demo
+      MYSQL_USER: User_demo
+      MYSQL_PASSWORD: User_pwd_demo
+
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    volumes:
+      - ./redis:/data
