@@ -1,8 +1,8 @@
-version: '3.8'
+version: '3.9'
 
 services:
   nginx:
-    image: nginx
+    image: nginx:latest
     container_name: nginx
     restart: always
     ports:
@@ -13,13 +13,22 @@ services:
       - ./certs:/etc/nginx/certs
       - ./html:/var/www/html
       - ./log/nginx:/var/log/nginx
+    depends_on:
+      - php
+      - mysql
+    networks:
+      - lnmp-network
 
   php:
-    image: php:fpm
+    image: php:latest
     container_name: php
     restart: always
     volumes:
       - ./html:/var/www/html
+    depends_on:
+      - mysql
+    networks:
+      - lnmp-network
 
   mysql:
     image: mysql:5.7.44
@@ -31,10 +40,16 @@ services:
       MYSQL_ROOT_PASSWORD: Root_pwd_demo
       MYSQL_USER: User_demo
       MYSQL_PASSWORD: User_pwd_demo
+    networks:
+      - lnmp-network
 
-  redis:
-    image: redis
-    container_name: redis
+  memcached:
+    image: memcached:latest
+    container_name: memcached
     restart: always
-    volumes:
-      - ./redis:/data
+    networks:
+      - lnmp-network
+
+networks:
+  lnmp-network:
+    driver: bridge
