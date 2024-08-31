@@ -10,7 +10,7 @@ services:
       - ./conf.d:/etc/nginx/conf.d
       - ./certs:/etc/nginx/certs
       - ./html:/var/www/html
-      - ./log/nginx:/var/log/nginx
+      - nginx_logs:/var/log/nginx  # 使用命名卷而不是绑定挂载
     depends_on:
       - php
       - mysql
@@ -18,7 +18,7 @@ services:
       - lnmp-network
 
   php:
-    image: php:latest
+    image: php:fpm
     container_name: php
     restart: always
     volumes:
@@ -45,9 +45,13 @@ services:
     image: memcached:latest
     container_name: memcached
     restart: always
+    command: memcached -m 128 -o modern
     networks:
       - lnmp-network
 
 networks:
   lnmp-network:
     driver: bridge
+
+volumes:
+  nginx_logs:
