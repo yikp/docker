@@ -32,7 +32,6 @@ services:
     image: mysql:5.7.44
     container_name: mysql
     restart: always
-    platform: linux/amd64
     volumes:
       - ./mysql:/var/lib/mysql
     environment:
