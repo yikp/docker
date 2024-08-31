@@ -9,6 +9,7 @@ services:
     volumes:
       - ./conf.d:/etc/nginx/conf.d
       - ./certs:/etc/nginx/certs
+      - ./rewrite:/etc/nginx/rewrite
       - ./html:/var/www/html
       - nginx_logs:/var/log/nginx  # 使用命名卷而不是绑定挂载
     depends_on:
